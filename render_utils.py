@@ -6,6 +6,7 @@ import json
 import time
 import urllib
 import subprocess
+import random
 
 from flask import Markup, g, render_template, request
 from slimit import minify
@@ -222,3 +223,10 @@ def smarty_filter(s):
         print 'This string failed to encode: %s' % s
         return Markup(s)
 
+def filter_shuffle(seq):
+    try:
+        result = list(seq)
+        random.shuffle(result)
+        return result
+    except:
+        return seq

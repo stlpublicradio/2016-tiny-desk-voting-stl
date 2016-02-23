@@ -1,47 +1,228 @@
 // Global jQuery references
 var $commentCount = null;
+var config = {
+    "options": {
+        "dataSource": {
+            "url": "1n14ZaURHoFteL7CqtKbz_FlfeGa_XFftwpz0PTscIQ0",
+            "type": "google"
+        }
+    },
+    "dataDestination": "https://docs.google.com/forms/d/1jPGH-2dhcOzXLbiEpdAuNkz13SM4RWtxkbxkw5_gpJE/formResponse",
+    "fields": [
+        {
+	"name": "Bands",
+	"required": false,
+	"type": "checkbox",
+	"field": "entry.1602302057",
+	"choices": [
+        "fourth-city-rag",
+        "adult-fur-vi",
+        "al-holiday",
+        "alexander-ruwe",
+        "beth-bombara",
+        "brian-clarke",
+        "blank-generation",
+        "blastar",
+        "bobby-stevens",
+        "brother-lee",
+        "bud-summers",
+        "cara-louise-band",
+        "catching-the-westbound",
+        "caveofswords",
+        "cracked-ceilings",
+        "doctor-delia",
+        "dubb-nubb",
+        "erick-rudiak",
+        "falling-fences",
+        "fitz",
+        "flatwoods",
+        "flying-house",
+        "hazard-to-ya-booty",
+        "josh-brophy",
+        "leponds",
+        "lola-toben",
+        "mark-brainard",
+        "miss-molly-simms",
+        "mitchell-ferguson",
+        "mt-thelonious",
+        "nicole-grace",
+        "old-souls-revival",
+        "pamela-devine",
+        "raye-cole",
+        "smokstik",
+        "sport",
+        "subtle-aggression-monopoly",
+        "summer-osborne",
+        "the-best-cat-memes",
+        "the-brainstems",
+        "the-driftaways",
+        "the-fog-lights",
+        "the-incorporated",
+        "the-vanilla-beans",
+        "timothy-bradley",
+        "tommy-halloran-guerilla-strings",
+        "trigger-five",
+        "whiskey-raccoons",
+        "whsky-gngr",
+        "will-gant"
+	]
+           }
+    ]
+};
 
 /*
  * Run on page load.
  */
-var onDocumentLoad = function(e) {
-    // Cache jQuery references
-    $commentCount = $('.comment-count');
+ var onDocumentLoad = function(e) {
+     $(".fave").click(function() {
+         $(this).toggleClass("faved fa-thumbs-o-up fa-thumbs-up fa-2x fa-3x");
+     });
 
-    renderExampleTemplate();
-    getCommentCount(showCommentCount);
+     pageInit();
 
-    SHARE.setup();
+ }
+
+
+ function pageInit(){
+     //Don't populate the form or set listeners if they already submitted
+      try {
+        //If they've already submitted, don't let them resubmit
+        if (localStorage.getItem("2016-tiny-desk-faves")) {
+        }
+        else {
+            setUpPage();
+        }
+      } catch (e) {}
+
+ };
+
+ var priorities = $.parseJSON(localStorage.getItem("2016-tiny-desk-faves"));
+
+function setUpPage() {
+    initFromConfig(config);
+    $('#submit').append('<input class="btn btn-default" name="submitButton" value="Done" type="button" onclick="submitForm();" />');
+
 }
 
-/*
- * Basic templating example.
- */
-var renderExampleTemplate = function() {
-    var context = $.extend(APP_CONFIG, {
-        'template_path': 'jst/example.html',
-        'config': JSON.stringify(APP_CONFIG, null, 4),
-        'copy': JSON.stringify(COPY, null, 4)
+function initFromConfig(config) {
+
+  var $form = $('#form form');
+
+  //Don't populate the form or set listeners if they already submitted
+   try {
+     //If they've already submitted, don't let them resubmit
+     if (localStorage.getItem(stored_priorities)) {
+       return true;
+     }
+   } catch (e) {}
+
+   //Set the form action
+   $form.attr('action',config.dataDestination)
+         .attr('method',config.dataMethod || "post")
+         .attr('target', 'hidden_iframe')
+         .attr('onsubmit', 'submitted=true');
+
+   //Create the form fields
+   $.each(config.fields || [],function(i,f){
+     $form.append(getFormElement(f));
+   });
+
+}
+
+function getFormElement(item) {
+    var $el,
+        $outer = $('<div></div>')
+                  .addClass('fs-form-item')
+                  .toggleClass('required',item.required);
+
+    $outer.append('<label>' + item.name + (item.required ? ' *' : '') + '</label>');
+
+    if (item.name.toLowerCase() == 'x' || item.name.toLowerCase() == 'y') {
+
+      return $('<input/>')
+              .attr({
+                type: 'hidden',
+                name: item.field
+              })
+              .addClass(item.name.toLowerCase());
+
+    } else if (item.type == 'textarea') {
+
+      $el = $('<textarea></textarea>')
+              .attr('name',item.field);
+
+    } else if (item.type == 'select') {
+      $el = $('<select></select>')
+              .attr('name',item.field);
+
+      $.each(item.choices,function(i,c){
+
+        $el.append(
+
+          $('<option></option>').text(c)
+
+        );
+
+      });
+
+    } else if (item.type == 'radio' || item.type == 'checkbox') {
+
+      $el = $('<div></div>');
+
+      $.each(item.choices,function(i,c){
+
+        var $i = $('<input/>').attr({
+              name: item.field,
+              type: item.type,
+              value: c
+            }),
+            $s = $('<span/>').text(c);
+
+        $el.append($i);
+        $el.append($s);
+
+      });
+    } else {
+
+      $el = $('<input/>').attr({
+        name: item.field,
+        type: item.type,
+        value: ''
+      });
+
+    }
+
+    $outer.append($el);
+
+    return $outer;
+
+  }
+
+function submitForm() {
+    // fill out form
+    var elements = [];
+
+    faves = $('.faved').map(function() {
+        var $item = $(this);
+        return $item.attr('id');
+    }).get()
+    $inputs = $('form *');
+    $form = $('form');
+
+    $inputs.filter('input').each(function(i, input){
+        var $form_item = $(this);
+        var form_attr = $form_item.attr("value")
+
+        if ($.inArray(form_attr, faves) > -1) {
+            $form_item.attr("checked", true);
+        }
     });
 
-    var html = JST.example(context);
+    $form.submit();
 
-    $('#template-example').html(html);
+    $('#submit').attr('style', 'display:none')
+
 }
 
-/*
- * Display the comment count.
- */
-var showCommentCount = function(count) {
-    $commentCount.text(count);
-
-    if (count > 0) {
-        $commentCount.addClass('has-comments');
-    }
-
-    if (count > 1) {
-        $commentCount.next('.comment-label').text('Comments');
-    }
-}
 
 $(onDocumentLoad);

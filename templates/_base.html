@@ -56,7 +56,7 @@
             {% endblock wide_content %}
     </section>
 
-    {% include '_footer.html' %}
+    {# {% include '_footer.html' %} #}
 
 
     {% endblock outer_content %}
@@ -71,8 +71,8 @@
     {# {{ JS.push('js/lib/ZeroClipboard.js') }} #}
 
     {# uncomment both files to use simpleStorage #}
-    {# {{ JS.push('js/lib/simpleStorage.js') }} #}
-    {# {{ JS.push('js/storage.js') }} #}
+    {{ JS.push('js/lib/simpleStorage.js') }}
+    {{ JS.push('js/storage.js') }}
 
     {% if RELOAD_TRIGGER %}
     {{ JS.push('js/reload.js') }}
