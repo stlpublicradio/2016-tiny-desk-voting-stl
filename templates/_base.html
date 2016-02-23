@@ -12,9 +12,6 @@
     <!-- META TAGS -->
     {% include '_meta.html' %}
 
-    <!-- FONTS -->
-    {% include '_fonts.html' %}
-
     <!-- CSS -->
 	{{ CSS.push('less/app.less') }}
     {% block extra_css %}
@@ -24,7 +21,9 @@
     <!-- JS -->
     {{ JS.push('js/lib/modernizr.js') }}
     {{ JS.push('js/lib/retina.min.js') }}
-	{{ JS.render('js/app-header.min.js') }}
+    {{ JS.push('js/app_config.js') }}
+    {{ JS.push('js/analytics.js') }}
+    {{ JS.render('js/app-header.min.js') }}
 
     {% include '_social_tags.html' %}
 
@@ -32,11 +31,6 @@
     {% endblock extra_head %}
 </head>
 <body>
-    <!-- ANALYTICS JAVASCRIPT -->
-    {{ JS.push('js/app_config.js') }}
-    {{ JS.push('js/analytics.js') }}
-    {{ JS.render('js/app-header.min.js') }}
-
     <a class="sr-only" href="#content">Skip To Content</a>
 
     {% block outer_content %}

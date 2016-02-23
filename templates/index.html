@@ -1,9 +1,22 @@
 {% extends '_base.html' %}
 
 {% block content %}
+    <div class="row intro-contain">
+        <div class="col-xs-8">
+            <div class="intro">
+                <h1>{{ COPY.content.project_name }}</h1>
+                <p class="lead">{{ COPY.content.intro }}</p>
+                <p>{{ COPY.content.intro_graf_2 }}</p>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <img class="img-responsive" src="./assets/tiny-desk-poster.jpg">
+        </div>
+    </div>
+    <div class="bands">
     {% for row in COPY.bands|shuffle() %}
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-2 details">
                 <h2>{{ row.name }}</h2>
                 {% if row.site or row.facebook %}
                     <h4>
@@ -15,17 +28,17 @@
                         {% endif %}
                     </h4>
                 {% endif %}
-                <p>Favorite:</p>
-                <p><i id="{{row.slug}}" class="fave fa fa-thumbs-o-up fa-2x"></i></p>
+                <button type="button" class="fave-button btn btn-lg btn-default"><i id="{{row.slug}}" class="fave fa fa-meh-o fa-2x"></i></button>
 
             </div>
             <div class="col-sm-10">
                 <div class="embed-responsive embed-responsive-16by9">
-                  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ row.video }}" allowfullscreen></iframe>
+                  <iframe class="embed-responsive-item" src="//www.youtube.com/embed/{{ row.video }}" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
     {% endfor %}
+    </div>
     <div id="submit">
               <div style="display:none" id="form"><form/></div>
               <iframe style="display:none" name="hidden_iframe" id="hidden_iframe"></iframe>

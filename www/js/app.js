@@ -69,14 +69,12 @@ var config = {
            }
     ]
 };
+var faves = STORAGE.get("faves");
 
 /*
  * Run on page load.
  */
  var onDocumentLoad = function(e) {
-     $(".fave").click(function() {
-         $(this).toggleClass("faved fa-thumbs-o-up fa-thumbs-up fa-2x fa-3x");
-     });
 
      pageInit();
 
@@ -84,22 +82,41 @@ var config = {
 
 
  function pageInit(){
+
      //Don't populate the form or set listeners if they already submitted
-      try {
-        //If they've already submitted, don't let them resubmit
-        if (localStorage.getItem("2016-tiny-desk-faves")) {
-        }
-        else {
-            setUpPage();
-        }
-      } catch (e) {}
+     if (faves !== undefined && faves !== null) {
+         restoreFaves();
+      }
+      else {
+          setUpPage();
+      }
 
  };
 
- var priorities = $.parseJSON(localStorage.getItem("2016-tiny-desk-faves"));
+ function restoreFaves() {
+     $('#submit').remove();
+     $('.fave-button').attr("disabled", "disabled");
+     $('.fave').each(function(){
+         var faveId = $(this).attr("id");
+         if ($.inArray(faveId, faves) > -1) {
+             $(this).toggleClass("fa-meh-o fa-smile-o");
+             $(this).parent().addClass("active");
+         }
+        //  var $form_item = $(this);
+        //  var form_attr = $form_item.attr("value")
+         //
+        //  if ($.inArray(form_attr, faves) > -1) {
+        //      $form_item.attr("checked", true);
+        //  }
+     });
+ }
 
 function setUpPage() {
     initFromConfig(config);
+    $(".fave-button").click(function() {
+        $(this).toggleClass("active");
+        $(this).children().toggleClass("faved fa-meh-o fa-smile-o");
+    });
     $('#submit').append('<input class="btn btn-default" name="submitButton" value="Done" type="button" onclick="submitForm();" />');
 
 }
@@ -107,14 +124,6 @@ function setUpPage() {
 function initFromConfig(config) {
 
   var $form = $('#form form');
-
-  //Don't populate the form or set listeners if they already submitted
-   try {
-     //If they've already submitted, don't let them resubmit
-     if (localStorage.getItem(stored_priorities)) {
-       return true;
-     }
-   } catch (e) {}
 
    //Set the form action
    $form.attr('action',config.dataDestination)
@@ -219,6 +228,12 @@ function submitForm() {
     });
 
     $form.submit();
+
+    try {
+   //put priorities into localStorage to mark that they submitted it
+   STORAGE.set("faves",faves);
+   // STORAGE.setTTL("faves", 2592000000)
+     } catch(e) {}
 
     $('#submit').attr('style', 'display:none')
 
