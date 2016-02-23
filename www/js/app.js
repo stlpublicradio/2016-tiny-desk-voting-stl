@@ -83,6 +83,14 @@ var faves = STORAGE.get("faves");
 
  function pageInit(){
 
+     var cards = $(".band-pair");
+ for(var i = 0; i < cards.length; i++){
+     var target = Math.floor(Math.random() * cards.length -1) + 1;
+     var target2 = Math.floor(Math.random() * cards.length -1) +1;
+     cards.eq(target).before(cards.eq(target2));
+ }
+
+
      //Don't populate the form or set listeners if they already submitted
      if (faves !== undefined && faves !== null) {
          restoreFaves();
@@ -102,13 +110,9 @@ var faves = STORAGE.get("faves");
              $(this).toggleClass("fa-meh-o fa-smile-o");
              $(this).parent().addClass("active");
          }
-        //  var $form_item = $(this);
-        //  var form_attr = $form_item.attr("value")
-         //
-        //  if ($.inArray(form_attr, faves) > -1) {
-        //      $form_item.attr("checked", true);
-        //  }
      });
+     $('#thanks').show();
+
  }
 
 function setUpPage() {
@@ -235,8 +239,8 @@ function submitForm() {
    // STORAGE.setTTL("faves", 2592000000)
      } catch(e) {}
 
-    $('#submit').attr('style', 'display:none')
-
+    $('#submit').hide();
+    $('#thanks').show();
 }
 
 

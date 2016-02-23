@@ -2,40 +2,51 @@
 
 {% block content %}
     <div class="row intro-contain">
-        <div class="col-xs-8">
+        <div class="col-sm-8">
             <div class="intro">
                 <h1>{{ COPY.content.project_name }}</h1>
                 <p class="lead">{{ COPY.content.intro }}</p>
-                <p>{{ COPY.content.intro_graf_2 }}</p>
+                <ol>
+                    <li>{{ COPY.content.instruction_1 }}</li>
+                    <li>{{ COPY.content.instruction_2 }}</li>
+                    <li>{{ COPY.content.instruction_3 }}</li>
+                </ol>
             </div>
         </div>
-        <div class="col-xs-4">
+        <div class="col-sm-4">
             <img class="img-responsive" src="./assets/tiny-desk-poster.jpg">
         </div>
     </div>
     <div class="bands">
-    {% for row in COPY.bands|shuffle() %}
-        <div class="row">
-            <div class="col-sm-2 details">
-                <h2>{{ row.name }}</h2>
-                {% if row.site or row.facebook %}
-                    <h4>
-                        {% if row.site %}
-                            <a target="_blank" href="{{ row.site }}"><i class="fa fa-external-link-square"></i></a>
+    {% for row in COPY.bands|shuffle()|batch(2) %}
+        <div class="row band-pair">
+            {% for column in row %}
+                <div class="column col-md-6 clearfix">
+                    <div class="col-sm-3 details">
+                        <h2>{{ column.name }}</h2>
+                        {% if column.site or column.facebook %}
+                            <h4>
+                                {% if column.site %}
+                                    <a target="_blank" href="{{ column.site }}"><i class="fa fa-external-link-square"></i></a>
+                                {% endif %}
+                                {% if column.facebook %}
+                                     <a target="_blank" href="{{ column.facebook }}"><i class="fa fa-facebook-square"></i></a>
+                                {% endif %}
+                            </h4>
                         {% endif %}
-                        {% if row.facebook %}
-                             <a target="_blank" href="{{ row.facebook }}"><i class="fa fa-facebook-square"></i></a>
-                        {% endif %}
-                    </h4>
-                {% endif %}
-                <button type="button" class="fave-button btn btn-lg btn-default"><i id="{{row.slug}}" class="fave fa fa-meh-o fa-2x"></i></button>
+                        <button type="button" class="fave-button btn btn-lg btn-default"><i id="{{column.slug}}" class="fave fa fa-meh-o fa-2x"></i></button>
 
-            </div>
-            <div class="col-sm-10">
-                <div class="embed-responsive embed-responsive-16by9">
-                  <iframe class="embed-responsive-item" src="//www.youtube.com/embed/{{ row.video }}" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-contain col-sm-9">
+                        <div class="embed-responsive embed-responsive-16by9">
+                          <iframe class="embed-responsive-item" src="//www.youtube.com/embed/{{ column.video }}" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="visible-xs">
+                        <hr>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
     {% endfor %}
     </div>
@@ -44,4 +55,9 @@
               <iframe style="display:none" name="hidden_iframe" id="hidden_iframe"></iframe>
               <h3>All done?</h3>
     </div>
+    <div id="thanks" style="display:none">
+        <h1>Thanks for submitting your faves. See you at the show!</h1>
+        <p>One more thing: Consider sharing this with a friend so they can hear some great local bands and pick their faves too: <a class="btn btn-default" role="button" href="http://twitter.com/share?text={{ COPY.share.twitter_text|urlencode }}&amp;url={{ COPY.share.share_url|urlencode }}" target="_blank" onclick="ANALYTICS.clickTweet('share-discuss');"><i class="fa fa-twitter share-icon"> </i>#TinyDeskSTL</a></p>
+    </div>
+
 {% endblock %}
