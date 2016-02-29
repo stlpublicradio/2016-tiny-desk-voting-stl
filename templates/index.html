@@ -6,11 +6,6 @@
             <div class="intro">
                 <h1>{{ COPY.content.project_name }}</h1>
                 <p class="lead">{{ COPY.content.intro }}</p>
-                <ol>
-                    <li>{{ COPY.content.instruction_1 }}</li>
-                    <li>{{ COPY.content.instruction_2 }}</li>
-                    <li>{{ COPY.content.instruction_3 }}</li>
-                </ol>
             </div>
         </div>
         <div class="col-sm-4">
@@ -49,15 +44,6 @@
             {% endfor %}
         </div>
     {% endfor %}
-    </div>
-    <div id="submit">
-              <div style="display:none" id="form"><form/></div>
-              <iframe style="display:none" name="hidden_iframe" id="hidden_iframe"></iframe>
-              <h3>All done?</h3>
-    </div>
-    <div id="thanks" style="display:none">
-        <h1>Thanks for submitting your faves. See you at the show!</h1>
-        <p>One more thing: Consider sharing this with a friend so they can hear some great local bands and pick their faves too: <a class="btn btn-default" role="button" href="http://twitter.com/share?text={{ COPY.share.twitter_text|urlencode }}&amp;url={{ COPY.share.share_url|urlencode }}" target="_blank" onclick="ANALYTICS.clickTweet('share-discuss');"><i class="fa fa-twitter share-icon"> </i>#TinyDeskSTL</a></p>
     </div>
 
 {% endblock %}
